@@ -7,6 +7,12 @@ h1 {
     font-size: x-large;
 }
 
+.restart {
+    height: 40px;
+    width: 40px;
+    font-size: large;
+}
+
 .level {
     margin-bottom: 30px;
 }
