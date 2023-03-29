@@ -7,12 +7,13 @@ table {
 }
 
 .cell {
+    background-color: aqua;
     border: 2px solid #000;
     padding: 3px;
     height: 25px;
     width: 25px;
 }
 
-.cover {
-   display: none;
+.shown {
+    background-color: rgb(255, 255, 255);
 }
