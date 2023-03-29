@@ -2,7 +2,20 @@ body {
     text-align: center;
 }
 
+h1 {
+    margin-top: 100px;
+    font-size: x-large;
+}
+
+.level {
+    margin-bottom: 30px;
+}
+.container {
+    margin-top: 10px;
+}
+
 table {
+    margin-top: 100px;
     margin: auto;
 }
 
@@ -14,6 +27,6 @@ table {
     width: 25px;
 }
 
-.shown {
-    background-color: rgb(255, 255, 255);
-}
+/* .shown {
+    background-color: rgb(255, 0, 0);
+} */

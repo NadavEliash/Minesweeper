@@ -13,7 +13,12 @@
     <h1>MINESWEEPER</h1>
     
     <div class="top">
-        <button class="button restart" onclick="onInitGame()">🙂</button>
+        <div class="button level">
+            <button onclick="onLevel('Beginner')">Beginner</button>
+            <button onclick="onLevel('Medium')">Medium</button>
+            <button onclick="onLevel('Expert')">Expert</button>
+        </div>
+        <button class="button restart" onclick="onInitGame()"></button>
     </div>
     <div class="container">
         <table> 
