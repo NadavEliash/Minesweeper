@@ -31,11 +31,10 @@ var gStartTime = 0
 var gTimeInterval
 var gHintClicked
 var gScore = 0
-var gSafeclick
+var gSafeclickCount
 var gMinesByUserCount = 0
 
-
-
+var gIsShownLastClick = []
 
 function onInitGame() {
     gGame.isOn = true
@@ -44,7 +43,8 @@ function onInitGame() {
     gGame.markedCount = 0
     gGame.secsPassed = 0
     gGame.lives = 3
-    gSafeclick = 3
+    gSafeclickCount = 3
+    gMinesByUserCount = 0
 
     restartButton('start')
     renderLives(gGame.lives)
@@ -140,6 +140,7 @@ function onCellClicked(elCell, i, j) {
             gBoard[i][j].isMine = true
             renderCellHint(elCell, MINE)
             gMinesByUserCount++
+            console.log(gMinesByUserCount, gLevel.mines)
             if (gMinesByUserCount === gLevel.mines) {
                 setTimeout(buildBoardByUser, 1500)
             }
@@ -161,6 +162,7 @@ function onCellClicked(elCell, i, j) {
     if (clickedCell.isMine === true) {
         gGame.lives--
         renderLives(gGame.lives)
+        gBoard[i][j].isShown = true
         if (!gGame.lives) {
             revealMines()
             gGame.isOn = false
@@ -516,7 +518,7 @@ function renderBestScore(levelStr, bestScore) {
 // SAFE CLICK BUTTON
 
 function onSafeClick() {
-    if (!gGame.isOn || !gSafeclick || gGame.firstClick) return
+    if (!gGame.isOn || !gSafeclickCount || gGame.firstClick) return
     const cells = getCoverCells()
     const random = getRandomInt(0, cells.length)
     const safeCell = cells[random]
@@ -527,7 +529,7 @@ function onSafeClick() {
     if (gBoard[safeCell.i][safeCell.j].isMine) value = MINE
     renderSafeCell(elCell, value)
     setTimeout(renderCellEmpty, 1000, elCell, '');
-    gSafeclick--
+    gSafeclickCount--
     renderSafeButton()
 }
 
@@ -549,16 +551,19 @@ function renderSafeCell(elCell, value) {
 
 function renderSafeButton() {
     const elSafeButtonNum = document.querySelector('.num-clicks-remain')
-    elSafeButtonNum.innerHTML = `${gSafeclick}`
+    elSafeButtonNum.innerHTML = `${gSafeclickCount}`
 }
 
 // MANUALY POSITIONED MINES
+
+// TODO:    fix problem of added mines
+//          fix button toggle
 
 function onMinesByUser() {
     onInitGame()
     gGame.isOn = false
     gGame.minesByUser = true
-    renderMinesByUserButton()
+    renderButtonMinesByUser()
 }
 
 function buildBoardByUser() {
@@ -575,13 +580,26 @@ function buildBoardByUser() {
             gBoard[i][j] = cell
         }
     }
-    renderMinesByUserButton()
+    
+    renderButtonMinesByUser()
     renderBoard(gBoard, '.board')
     gGame.isOn = true
     gGame.minesByUser = false
+    console.log(gBoard)
 }
 
-function renderMinesByUserButton(){
+function renderButtonMinesByUser() {
     const elButton = document.querySelector('.button.mines-by-user')
     elButton.classList.toggle('clicked')
+}
+
+
+// UNDO
+
+// TODO:    set mines in the board as objects (not an array)
+//          set an array contains all last turn isShown cell to return and render those cells when UNDO clicked
+
+function onUndo() {
+    gGame.isOn = true
+
 }

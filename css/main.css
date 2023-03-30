@@ -31,6 +31,14 @@ button {
     margin-left: calc(50% - 20px);
 }
 
+.undo {
+    height: 30px;
+    width: 30px;
+    rotate: 180deg;
+    font-size: large;
+    font-weight: bold;
+}
+
 .level {
     margin-left: calc(50% - 90px);
     margin-bottom: 10px;
