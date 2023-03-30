@@ -135,6 +135,7 @@ table {
     font-size: small;
     border: solid 2px black;
     padding: 7px;
+    height: 33px;
 }
 
 .hide {

@@ -48,7 +48,6 @@ function onInitGame() {
     
     clearInterval(gTimeInterval)
     restartTime()
-    renderBestScoreTable()
 
     // create an empty board
     gBoard = createMat(gLevel.size, gLevel.size)
@@ -83,11 +82,11 @@ function renderHints(count) {
     elHintsCount.innerHTML = str.repeat(count)
 }
 
-function renderBestScoreTable(){
-    const elBestScore = document.querySelector('.best-score')
-    elBestScore.innerHTML = `<table><tbody class="best-score"><tr><td>Begginer</td><td>Medium</td><td>Expert</td></tr>
-    <tr><td class="beginner"></td><td class="medium"></td><td class="expert"></td></tr></tbody></table>`
-}
+// function renderBestScoreTable(){
+//     const elBestScore = document.querySelector('.best-score')
+//     elBestScore.innerHTML = `<table><tbody class="best-score"><tr><td>Begginer</td><td>Medium</td><td>Expert</td></tr>
+//     <tr><td class="beginner"></td><td class="medium"></td><td class="expert"></td></tr></tbody></table>`
+// }
 
 // RENDER EMPTY BOARD
 
