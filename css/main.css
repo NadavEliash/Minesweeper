@@ -32,6 +32,41 @@ button {
     margin-bottom: 30px;
 }
 
+.lives {
+    position: absolute;
+    background-color: rgb(255, 241, 241);
+    text-align: center;
+    padding: 8px;
+    width: 100px;
+    margin-left: 100px;
+    margin-top: auto;
+    border: solid 2px red;
+}
+
+.dead {
+    background-color: rgb(165, 223, 201);
+    border: solid 2px black;
+}
+
+.hints {
+    position: absolute;
+    text-align: center;
+    padding: 5px;
+    width: 100px;
+    height: 40px;
+    margin-left: 100px;
+    margin-top: 60px;
+    border: solid 2px rgb(60, 27, 138);
+}
+
+.hint {
+    background-color: rgb(255, 215, 237);
+    border-radius: 50%;
+    height: 25px;
+    margin-left: 3px;
+    border: none;
+}
+
 .time {
     color: yellow;
     position: absolute;
@@ -47,46 +82,24 @@ button {
     background-color: rgb(27, 27, 27);
 }
 
-.lives {
+.safe-click {
     position: absolute;
-    background-color: rgb(255, 241, 241);
-    text-align: center;
-    padding: 8px;
-    width: 100px;
     margin-left: 100px;
-    margin-top: auto;
-    border: solid 2px red;
-}
-
-.hints {
-    position: absolute;
-    text-align: center;
-    padding: 5px;
-    width: 100px;
+    margin-top: 180px;
     height: 40px;
-    margin-left: 100px;
-    margin-top: 20px;
-    border: solid 2px rgb(60, 27, 138);
+    width: 100px;
+    background-color: rgb(179, 179, 179);
 }
 
-.hint {
-    background-color: rgb(255, 215, 237);
-    border-radius: 50%;
-    height: 25px;
-    margin-left: 3px;
-    border: none;
-}
-
-.dead {
-    background-color: rgb(165, 223, 201);
-    border: solid 2px black;
+.clicks-remain {
+    font-size: xx-small;
 }
 
 .container {
     margin-top: 10px;
 }
 
-table {
+.board {
     margin-top: 100px;
     margin: auto;
 }
@@ -103,6 +116,21 @@ table {
     width: 30px;
 }
 
+.cell-medium {
+    font-size: x-small;
+    font-weight: normal;
+    height: 24px;
+    width: 24px;
+}
+
+.cell-small {
+    font-size: xx-small;
+    font-weight: lighter;
+    padding: 1px;
+    height: 18px;
+    width: 20px;
+}
+
 .clicked-hint {
     background-color: rgb(236, 236, 45);
 }
@@ -111,10 +139,13 @@ table {
     background-color: rgba(156, 156, 156, 0.733);
 }
 
+.safe {
+    background-color: rgba(255, 128, 192, 0.829);
+}
+
 .score {
-    margin-top: 10px;
     text-align: center;
-    padding: 10px;
+    padding: 5px;
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
     font-size: xx-small;
 }
@@ -127,8 +158,12 @@ table {
 }
 
 .h2-best-score {
-    margin-top: 30px;
+    margin-top: 20px;
     font-size: small;
+}
+
+.best-score {
+    margin: auto;
 }
 
 .best-score td {

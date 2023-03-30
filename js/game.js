@@ -7,7 +7,8 @@ const MINE = '💣'
 var gBoard = []
 var gLevel = {
     size: 4,
-    mines: 2
+    mines: 2,
+    cellSize: 'cell'
 }
 var gGame = {
     isOn: false,
@@ -29,6 +30,7 @@ var gStartTime = 0
 var gTimeInterval
 var gHintClicked
 var gScore = 0
+var gSafeclick
 
 
 
@@ -40,14 +42,16 @@ function onInitGame() {
     gGame.markedCount = 0
     gGame.secsPassed = 0
     gGame.lives = 3
-    gScore = '000'
+    gSafeclick = 3
 
     restartButton('start')
     renderLives(gGame.lives)
     renderHints(3)
-    
+    renderSafeButton()
+
     clearInterval(gTimeInterval)
     restartTime()
+    hideScore()
 
     // create an empty board
     gBoard = createMat(gLevel.size, gLevel.size)
@@ -55,38 +59,36 @@ function onInitGame() {
 }
 
 // SET LEVELS. HTML button call the function, according to the selected level
+// each level sets the cells amount, mines amount and cells size
 
 function onLevelSelection(str) {
     switch (str) {
         case 'Beginner':
             gLevel.size = 4
             gLevel.mines = 2
+            gLevel.cellSize = 'cell'
             break
         case 'Medium':
             gLevel.size = 8
             gLevel.mines = 14
+            gLevel.cellSize = 'cell cell-medium'
             break
         case 'Expert':
             gLevel.size = 12
             gLevel.mines = 32
+            gLevel.cellSize = 'cell cell-small'
             break
     }
     onInitGame()
 }
 
-// RENDER HINT and BEST SCORE
+// RENDER HINT BOX
 
 function renderHints(count) {
     const elHintsCount = document.querySelector('.hints')
     var str = `<button class="hint" onclick="onHintClicked(this)">💡 </button>`
     elHintsCount.innerHTML = str.repeat(count)
 }
-
-// function renderBestScoreTable(){
-//     const elBestScore = document.querySelector('.best-score')
-//     elBestScore.innerHTML = `<table><tbody class="best-score"><tr><td>Begginer</td><td>Medium</td><td>Expert</td></tr>
-//     <tr><td class="beginner"></td><td class="medium"></td><td class="expert"></td></tr></tbody></table>`
-// }
 
 // RENDER EMPTY BOARD
 
@@ -98,7 +100,7 @@ function renderBoard(board, selector) {
         for (var j = 0; j < board[0].length; j++) {
 
             const cell = board[i][j]
-            const className = `cell cell-${i}-${j}`
+            const className = `${gLevel.cellSize} cell-${i}-${j}`
             strHTML += `<td class="${className}" onclick="onCellClicked(this, ${i}, ${j})" oncontextmenu="onCellMarked(this, ${i}, ${j})"></td>`
         }
         strHTML += '</tr>'
@@ -210,7 +212,7 @@ function getElCell(board, i, j) {
     return elCell
 }
 
-// BUILD REAL BOARD, add mines and claulate neighbors
+// BUILD THE REAL BOARD (after first clicking), add mines and claulate neighbors
 
 function buildBoard() {
 
@@ -266,7 +268,7 @@ function getRandomCells(board) {
 }
 
 // FIRST CLICK SAFETY
-// create an array of all board cells but the first clicked
+// creates an array of all board cells without the first clicked, then puts mines randomly using that array
 
 function getCellsArray(board) {
     var cells = []
@@ -447,7 +449,7 @@ function renderNegsHintBack(elCell, cellI, cellJ) {
 
 function renderCellEmpty(elCell, value) {
     elCell.innerHTML = value
-    elCell.classList.remove('clicked', 'clicked-hint')
+    elCell.classList.remove('clicked', 'clicked-hint', 'safe')
 }
 
 function cancelHint() {
@@ -484,14 +486,57 @@ function renderScore() {
     if (gScore < 10) zeroFill = '00'
 
     const elScore = document.querySelector('.h1-score')
-    elScore.innerHTML = `Nice! Your score is: <span class="score-dig"> ${zeroFill}${gScore}`
+    elScore.innerHTML = `Your score is: <span class="score-dig"> ${zeroFill}${gScore}`
 }
 
-function renderBestScore(levelStr, bestScore){
+function hideScore() {
+    const elScore = document.querySelector('.h1-score')
+    elScore.innerHTML = ''
+}
+function renderBestScore(levelStr, bestScore) {
     var zeroFill = ''
     if (bestScore < 100) zeroFill = '0'
     if (bestScore < 10) zeroFill = '00'
 
     const elBestScore = document.querySelector(levelStr)
     elBestScore.innerHTML = `${zeroFill}${bestScore}`
+}
+
+// SAFE CLICK BUTTON
+
+function onSafeClick() {
+    if (!gGame.isOn || !gSafeclick) return
+    const cells = getCoverCells()
+    const random = getRandomInt(0, cells.length)
+    const safeCell = cells[random]
+    const elCell = getElCell(gBoard, safeCell.i, safeCell.j)
+
+    var value = ''
+    if (gBoard[safeCell.i][safeCell.j].minesAroundCount > 0) value = gBoard[safeCell.i][safeCell.j].minesAroundCount
+    if (gBoard[safeCell.i][safeCell.j].isMine) value = MINE
+    renderSafeCell(elCell, value)
+    setTimeout(renderCellEmpty, 1000, elCell, '');
+    gSafeclick--
+    renderSafeButton()
+}
+
+function getCoverCells() {
+    var cells = []
+    for (var i = 0; i < gBoard.length; i++) {
+        for (var j = 0; j < gBoard.length; j++) {
+            if (gBoard[i][j].isShown || gBoard[i][j].isMarked) continue
+            cells.push({ i: i, j: j })
+        }
+    }
+    return cells
+}
+
+function renderSafeCell(elCell, value) {
+    elCell.innerHTML = value
+    elCell.classList.add('safe')
+}
+
+function renderSafeButton() {
+    const elSafeButtonNum = document.querySelector('.num-clicks-remain')
+    elSafeButtonNum.innerHTML = `${gSafeclick}`
 }

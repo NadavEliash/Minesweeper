@@ -18,20 +18,20 @@
             <button class="button" onclick="onLevelSelection('Medium')">Medium</button>
             <button class="button" onclick="onLevelSelection('Expert')">Expert</button>
         </div>
-        <div class="time"></div>
         <div class="lives"></div>
-        <button class="button restart" onclick="onInitGame()"></button>
         <div class="hints"></div>
+        <div class="time"></div>
+        <button class="button safe-click" onclick="onSafeClick()">Safe Click <br><span class="clicks-remain"><span class="num-clicks-remain">3</span> clicks remain</span></button>
     </div>
+    <button class="button restart" onclick="onInitGame()"></button>
     <div class="container">
-        <table>
-            <tbody class="board"></tbody>
+        <table class="board">
+            <tbody></tbody>
         </table>
         <div class="score">
-            <h1 class="h1-score"></h1>
             <h2 class="h2-best-score">BEST SCORE</h2>
-            <table>
-                <tbody class="best-score">
+            <table class="best-score">
+                <tbody>
                     <tr>
                         <td>Begginer</td>
                         <td>Medium</td>
@@ -44,6 +44,7 @@
                     </tr>
                 </tbody>
             </table>
+            <h1 class="h1-score"></h1>
         </div>
     </div>
 
