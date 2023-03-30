@@ -1,7 +1,7 @@
 'use strict'
 
 const MINE = '💣'
-
+const MARK = '🚩'
 
 
 var gBoard = []
@@ -34,7 +34,10 @@ var gScore = 0
 var gSafeclickCount
 var gMinesByUserCount = 0
 
-var gIsShownLastClick = []
+var gLastTurnShownCount
+var gLastTurnCells = []
+var gCurrTurnCells = []
+
 
 function onInitGame() {
     gGame.isOn = true
@@ -46,6 +49,7 @@ function onInitGame() {
     gSafeclickCount = 3
     gMinesByUserCount = 0
 
+    buttonMinesByUserOff()
     restartButton('start')
     renderLives(gGame.lives)
     renderHints(3)
@@ -116,13 +120,14 @@ function renderBoard(board, selector) {
 // CLICKING CELLS
 
 function onCellClicked(elCell, i, j) {
+    gLastTurnShownCount = gGame.shownCount
 
     // FIRST CLICKING
 
     if (gGame.firstClick && gGame.isOn) {
         gFirstClick = { i: i, j: j }
         // console.log(gFirstClick)
-        buildBoard()
+        if (!gMinesByUserCount) buildBoard()
         gStartTime = Date.now()
         getTime()
         gGame.firstClick = false
@@ -140,9 +145,10 @@ function onCellClicked(elCell, i, j) {
             gBoard[i][j].isMine = true
             renderCellHint(elCell, MINE)
             gMinesByUserCount++
-            console.log(gMinesByUserCount, gLevel.mines)
+
             if (gMinesByUserCount === gLevel.mines) {
-                setTimeout(buildBoardByUser, 1500)
+                gGame.minesByUser = false
+                setTimeout(buildBoardByUser, 2000)
             }
             return
         } else {
@@ -163,6 +169,8 @@ function onCellClicked(elCell, i, j) {
         gGame.lives--
         renderLives(gGame.lives)
         gBoard[i][j].isShown = true
+        gLastTurnCells = gCurrTurnCells
+        getCurrTurnCells()
         if (!gGame.lives) {
             revealMines()
             gGame.isOn = false
@@ -183,11 +191,15 @@ function onCellClicked(elCell, i, j) {
     }
     else {
         expandShown(gBoard, i, j)
+        gLastTurnCells = gCurrTurnCells
+        getCurrTurnCells()
         return
     }
 
     clickedCell.isShown = true
     gGame.shownCount++
+    gLastTurnCells = gCurrTurnCells
+    getCurrTurnCells()
     // console.log(gGame.shownCount)
     // console.table(gBoard)
 
@@ -203,7 +215,7 @@ function expandShown(board, cellI, cellJ) {
             if (board[i][j].isShown) continue
 
             const value = board[i][j].minesAroundCount
-            const currElcell = getElCell(gBoard, i, j)
+            const currElcell = getElCell(i, j)
             renderCell(currElcell, value)
             board[i][j].isShown = true
             // console.log(gGame.shownCount)
@@ -221,7 +233,7 @@ function renderCell(elCell, value) {
     // console.log(elCell)
 }
 
-function getElCell(board, i, j) {
+function getElCell(i, j) {
     const elCell = document.querySelector(`.cell-${i}-${j}`)
     return elCell
 }
@@ -260,9 +272,13 @@ function buildBoard() {
 
 function createMines(board) {
     const randomCells = getRandomCells(board)
-
     for (var i = 0; i < randomCells.length; i++) {
-        board[randomCells[i].i][randomCells[i].j].isMine = true
+        board[randomCells[i].i][randomCells[i].j] = {
+            minesAroundCount: null,
+            isShown: false,
+            isMine: true,
+            isMarked: false
+        }
     }
     return board
 }
@@ -274,7 +290,6 @@ function getRandomCells(board) {
         const random = getRandomInt(0, cells.length)
         randomCells.push(cells[random])
         cells.splice(random, 1)
-        // console.log(cells)
     }
     // console.log(randomCells)
     return randomCells
@@ -318,7 +333,7 @@ function onCellMarked(elCell, i, j) {
     if (!gGame.isOn) return
     if (!gBoard[i][j].isMarked) {
         gBoard[i][j].isMarked = true
-        renderMarkedCell(elCell, '🚩')
+        renderMarkedCell(elCell, MARK)
         gGame.markedCount++
 
     } else {
@@ -375,7 +390,7 @@ function revealMines() {
     for (var i = 0; i < gBoard.length; i++) {
         for (var j = 0; j < gBoard[0].length; j++) {
             if (gBoard[i][j].isMine === true) {
-                const elCell = getElCell(gBoard, i, j)
+                const elCell = getElCell(i, j)
                 // console.log(elCell)
                 renderCell(elCell, MINE)
             }
@@ -413,7 +428,7 @@ function renderLives(count) {
 // HINTS
 
 function onHintClicked(elHint) {
-    if (!gGame.isOn) return
+    if (!gGame.isOn || gGame.firstClick) return
     gGame.hint = true
     gGame.isOn = false
     gHintClicked = elHint
@@ -430,11 +445,11 @@ function renderNegsHint(elCell, cellI, cellJ) {
             if (gBoard[i][j].isShown === true) continue
 
             if (gBoard[i][j].isMine === true) {
-                renderCellHint(getElCell(gBoard, i, j), MINE)
+                renderCellHint(getElCell(i, j), MINE)
             } else if (gBoard[i][j].minesAroundCount > 0) {
-                renderCellHint(getElCell(gBoard, i, j), gBoard[i][j].minesAroundCount)
+                renderCellHint(getElCell(i, j), gBoard[i][j].minesAroundCount)
             } else {
-                renderCellHint(getElCell(gBoard, i, j), '')
+                renderCellHint(getElCell(i, j), '')
             }
         }
     }
@@ -454,7 +469,7 @@ function renderNegsHintBack(elCell, cellI, cellJ) {
         for (var j = cellJ - 1; j <= cellJ + 1; j++) {
             if (j < 0 || j >= gBoard[i].length) continue
             if (gBoard[i][j].isShown === true) continue
-            renderCellEmpty(getElCell(gBoard, i, j), '')
+            renderCellEmpty(getElCell(i, j), '')
         }
     }
     cancelHint()
@@ -522,7 +537,7 @@ function onSafeClick() {
     const cells = getCoverCells()
     const random = getRandomInt(0, cells.length)
     const safeCell = cells[random]
-    const elCell = getElCell(gBoard, safeCell.i, safeCell.j)
+    const elCell = getElCell(safeCell.i, safeCell.j)
 
     var value = ''
     if (gBoard[safeCell.i][safeCell.j].minesAroundCount > 0) value = gBoard[safeCell.i][safeCell.j].minesAroundCount
@@ -537,7 +552,7 @@ function getCoverCells() {
     var cells = []
     for (var i = 0; i < gBoard.length; i++) {
         for (var j = 0; j < gBoard.length; j++) {
-            if (gBoard[i][j].isShown || gBoard[i][j].isMarked) continue
+            if (gBoard[i][j].isShown || gBoard[i][j].isMarked || gBoard[i][j].isMine) continue
             cells.push({ i: i, j: j })
         }
     }
@@ -563,7 +578,7 @@ function onMinesByUser() {
     onInitGame()
     gGame.isOn = false
     gGame.minesByUser = true
-    renderButtonMinesByUser()
+    buttonMinesByUserOn()
 }
 
 function buildBoardByUser() {
@@ -580,26 +595,76 @@ function buildBoardByUser() {
             gBoard[i][j] = cell
         }
     }
-    
-    renderButtonMinesByUser()
+
+    buttonMinesByUserOff()
     renderBoard(gBoard, '.board')
     gGame.isOn = true
     gGame.minesByUser = false
-    console.log(gBoard)
+    // console.log(gBoard)
 }
 
-function renderButtonMinesByUser() {
+function buttonMinesByUserOn() {
     const elButton = document.querySelector('.button.mines-by-user')
-    elButton.classList.toggle('clicked')
+    elButton.classList.add('clicked')
 }
+
+function buttonMinesByUserOff() {
+    const elButton = document.querySelector('.button.mines-by-user')
+    elButton.classList.remove('clicked')
+}
+
+
 
 
 // UNDO
 
-// TODO:    set mines in the board as objects (not an array)
-//          set an array contains all last turn isShown cell to return and render those cells when UNDO clicked
+// TODO: there is a problem with undo when "mines by user" function is on
 
 function onUndo() {
-    gGame.isOn = true
+    if (!gGame.isOn) return
+    gGame.shownCount = gLastTurnShownCount
+    renderBoard(gBoard, '.board')
+    renderLastTurnCells(gLastTurnCells)
+    getCurrTurnCells()
+}
 
+function getCurrTurnCells() {
+    gCurrTurnCells = []
+    for (var i = 0; i < gBoard.length; i++) {
+        for (var j = 0; j < gBoard[0].length; j++) {
+            if (gBoard[i][j].isShown) gCurrTurnCells.push({ i: i, j: j })
+        }
+    }
+}
+
+function renderLastTurnCells(cells) {
+
+    // clean the board
+    for (var i = 0; i < gBoard.length; i++) {
+        for (var j = 0; j < gBoard.length; j++) {
+            gBoard[i][j].isShown = false
+        }
+    }
+
+    // rerender last turn cells
+    for (var i = 0; i < cells.length; i++) {
+        gBoard[cells[i].i][cells[i].j].isShown = true
+
+        const elCell = getElCell(cells[i].i, cells[i].j)
+        var value = ''
+        if (gBoard[cells[i].i][cells[i].j].isMarked) value = MARK
+        if (gBoard[cells[i].i][cells[i].j].isMine) value = MINE
+        if (gBoard[cells[i].i][cells[i].j].minesAroundCount > 0) value = gBoard[cells[i].i][cells[i].j].minesAroundCount
+        renderCell(elCell, value)
+    }
+
+    // render last turn marks
+    for (var i = 0; i < gBoard.length; i++) {
+        for (var j = 0; j < gBoard.length; j++) {
+            if (gBoard[i][j].isMarked) {
+                const elCell = getElCell(i, j)
+                renderCell(elCell, MARK)
+            }
+        }
+    }
 }
