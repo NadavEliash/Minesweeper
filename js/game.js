@@ -14,6 +14,7 @@ var gGame = {
     isOn: false,
     firstClick: true,
     hint: false,
+    minesByUser: false,
     shownCount: 0,
     markedCount: 0,
     secsPassed: 0,
@@ -31,6 +32,7 @@ var gTimeInterval
 var gHintClicked
 var gScore = 0
 var gSafeclick
+var gMinesByUserCount = 0
 
 
 
@@ -117,7 +119,7 @@ function onCellClicked(elCell, i, j) {
 
     // FIRST CLICKING
 
-    if (gGame.firstClick) {
+    if (gGame.firstClick && gGame.isOn) {
         gFirstClick = { i: i, j: j }
         // console.log(gFirstClick)
         buildBoard()
@@ -127,10 +129,20 @@ function onCellClicked(elCell, i, j) {
     }
 
     // WHEN HINT SELECTED
+    // WHEN MINES-BY-USER SELCTED
 
     if (!gGame.isOn) {
         if (gGame.hint) {
             renderNegsHint(elCell, i, j)
+            return
+        } else if (gGame.minesByUser) {
+            // console.log(gBoard)
+            gBoard[i][j].isMine = true
+            renderCellHint(elCell, MINE)
+            gMinesByUserCount++
+            if (gMinesByUserCount === gLevel.mines) {
+                setTimeout(buildBoardByUser, 1500)
+            }
             return
         } else {
             return
@@ -221,7 +233,6 @@ function buildBoard() {
     gBoard = createMines(gBoard)
 
     // HARD CODED MINES
-
     // gBoard[1][1] = {minesAroundCount: null, isShown: false, isMine: true, isMarked: false}
     // gBoard[3][2] = {minesAroundCount: null, isShown: false, isMine: true, isMarked: false}
 
@@ -400,7 +411,7 @@ function renderLives(count) {
 // HINTS
 
 function onHintClicked(elHint) {
-    if (!gGame.lives) return
+    if (!gGame.isOn) return
     gGame.hint = true
     gGame.isOn = false
     gHintClicked = elHint
@@ -486,7 +497,7 @@ function renderScore() {
     if (gScore < 10) zeroFill = '00'
 
     const elScore = document.querySelector('.h1-score')
-    elScore.innerHTML = `Your score is: <span class="score-dig"> ${zeroFill}${gScore}`
+    elScore.innerHTML = `Nice! You do it in <span class="score-dig"> ${zeroFill}${gScore}</span> seconds`
 }
 
 function hideScore() {
@@ -505,7 +516,7 @@ function renderBestScore(levelStr, bestScore) {
 // SAFE CLICK BUTTON
 
 function onSafeClick() {
-    if (!gGame.isOn || !gSafeclick) return
+    if (!gGame.isOn || !gSafeclick || gGame.firstClick) return
     const cells = getCoverCells()
     const random = getRandomInt(0, cells.length)
     const safeCell = cells[random]
@@ -539,4 +550,38 @@ function renderSafeCell(elCell, value) {
 function renderSafeButton() {
     const elSafeButtonNum = document.querySelector('.num-clicks-remain')
     elSafeButtonNum.innerHTML = `${gSafeclick}`
+}
+
+// MANUALY POSITIONED MINES
+
+function onMinesByUser() {
+    onInitGame()
+    gGame.isOn = false
+    gGame.minesByUser = true
+    renderMinesByUserButton()
+}
+
+function buildBoardByUser() {
+    for (var i = 0; i < gBoard.length; i++) {
+        for (var j = 0; j < gBoard[0].length; j++) {
+            if (gBoard[i][j].isMine) continue
+            const minesAroundCount = setMinesNegsCount(i, j, gBoard)
+            const cell = {
+                minesAroundCount: minesAroundCount,
+                isShown: false,
+                isMine: false,
+                isMarked: false
+            }
+            gBoard[i][j] = cell
+        }
+    }
+    renderMinesByUserButton()
+    renderBoard(gBoard, '.board')
+    gGame.isOn = true
+    gGame.minesByUser = false
+}
+
+function renderMinesByUserButton(){
+    const elButton = document.querySelector('.button.mines-by-user')
+    elButton.classList.toggle('clicked')
 }

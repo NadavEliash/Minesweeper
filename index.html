@@ -11,12 +11,14 @@
 
 <body onload="onInitGame()" oncontextmenu="return false">
     <h1 class="title">MINESWEEPER</h1>
-
     <div class="top">
         <div class="button level">
             <button class="button" onclick="onLevelSelection('Beginner')">Beginner</button>
             <button class="button" onclick="onLevelSelection('Medium')">Medium</button>
             <button class="button" onclick="onLevelSelection('Expert')">Expert</button>
+        </div>
+        <div class="mines-by-user">
+            <button class="button mines-by-user" onclick="onMinesByUser()">Set mines yourself</button>
         </div>
         <div class="lives"></div>
         <div class="hints"></div>
