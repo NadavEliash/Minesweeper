@@ -38,6 +38,8 @@ var gLastTurnShownCount
 var gLastTurnCells = []
 var gCurrTurnCells = []
 
+var gDark = false
+
 
 function onInitGame() {
     gGame.isOn = true
@@ -666,5 +668,18 @@ function renderLastTurnCells(cells) {
                 renderCell(elCell, MARK)
             }
         }
+    }
+}
+
+// DARK MODE
+
+function onDark() {
+    gDark = !gDark
+
+    const elLink = document.querySelector('link')
+    if (gDark) {
+        elLink.href = 'css/dark.css'
+    } else {
+        elLink.href = 'css/main.css'
     }
 }
