@@ -18,10 +18,17 @@ var gGame = {
     secsPassed: 0,
     lives: 3
 }
+var gBestScore = {
+    beginner: Infinity,
+    medium: Infinity,
+    expert: Infinity
+}
 
 var gFirstClick = {}
+var gStartTime = 0
+var gTimeInterval
 var gHintClicked
-
+var gScore = 0
 
 
 
@@ -33,16 +40,22 @@ function onInitGame() {
     gGame.markedCount = 0
     gGame.secsPassed = 0
     gGame.lives = 3
+    gScore = '000'
+
+    restartButton('start')
     renderLives(gGame.lives)
     renderHints(3)
-    restartButton('start')
+    
+    clearInterval(gTimeInterval)
+    restartTime()
+    renderBestScoreTable()
 
     // create an empty board
     gBoard = createMat(gLevel.size, gLevel.size)
     renderBoard(gBoard, '.board')
 }
 
-// set 3 levels. HTML button call the function, according to the selected level
+// SET LEVELS. HTML button call the function, according to the selected level
 
 function onLevelSelection(str) {
     switch (str) {
@@ -62,7 +75,21 @@ function onLevelSelection(str) {
     onInitGame()
 }
 
-// RENDER an empty board first
+// RENDER HINT and BEST SCORE
+
+function renderHints(count) {
+    const elHintsCount = document.querySelector('.hints')
+    var str = `<button class="hint" onclick="onHintClicked(this)">💡 </button>`
+    elHintsCount.innerHTML = str.repeat(count)
+}
+
+function renderBestScoreTable(){
+    const elBestScore = document.querySelector('.best-score')
+    elBestScore.innerHTML = `<table><tbody class="best-score"><tr><td>Begginer</td><td>Medium</td><td>Expert</td></tr>
+    <tr><td class="beginner"></td><td class="medium"></td><td class="expert"></td></tr></tbody></table>`
+}
+
+// RENDER EMPTY BOARD
 
 function renderBoard(board, selector) {
 
@@ -93,6 +120,8 @@ function onCellClicked(elCell, i, j) {
         gFirstClick = { i: i, j: j }
         // console.log(gFirstClick)
         buildBoard()
+        gStartTime = Date.now()
+        getTime()
         gGame.firstClick = false
     }
 
@@ -123,6 +152,7 @@ function onCellClicked(elCell, i, j) {
             revealMines()
             gGame.isOn = false
             restartButton('lose')
+            clearInterval(gTimeInterval)
             return
         } else {
             renderCell(elCell, MINE)
@@ -292,16 +322,39 @@ function renderMarkedCell(elCell, value) {
 
 
 
-// gameover options
+// GAME OVER options
 
 function checkGameOver() {
     // console.log(gGame.shownCount)
 
     if (gGame.shownCount === gLevel.size ** 2 - gLevel.mines) {
+
+        clearInterval(gTimeInterval)
         gGame.isOn = false
         restartButton('win')
+        getBestScore()
     }
     return
+}
+
+function getBestScore() {
+    switch (gLevel.size) {
+        case 4:
+            if (gScore < gBestScore.beginner) gBestScore.beginner = gScore
+            renderScore()
+            renderBestScore('.beginner', gBestScore.beginner)
+            break
+        case 8:
+            if (gScore < gBestScore.medium) gBestScore.medium = gScore
+            renderScore()
+            renderBestScore('.medium', gBestScore.medium)
+            break
+        case 12:
+            if (gScore < gBestScore.expert) gBestScore.expert = gScore
+            renderScore()
+            renderBestScore('.expert', gBestScore.expert)
+            break
+    }
 }
 
 function revealMines() {
@@ -343,15 +396,10 @@ function renderLives(count) {
 }
 
 
-// hints
-
-function renderHints(count) {
-    const elHintsCount = document.querySelector('.hints')
-    var str = `<button class="hint" onclick="onHintClicked(this)">💡 </button>`
-    elHintsCount.innerHTML = str.repeat(count)
-}
+// HINTS
 
 function onHintClicked(elHint) {
+    if (!gGame.lives) return
     gGame.hint = true
     gGame.isOn = false
     gHintClicked = elHint
@@ -381,6 +429,11 @@ function renderNegsHint(elCell, cellI, cellJ) {
     setTimeout(renderNegsHintBack, 1000, elCell, cellI, cellJ)
 }
 
+function renderCellHint(elCell, value) {
+    elCell.innerHTML = value
+    elCell.classList.add('clicked-hint')
+}
+
 function renderNegsHintBack(elCell, cellI, cellJ) {
     for (var i = cellI - 1; i <= cellI + 1; i++) {
         if (i < 0 || i >= gBoard.length) continue
@@ -393,11 +446,6 @@ function renderNegsHintBack(elCell, cellI, cellJ) {
     cancelHint()
 }
 
-function renderCellHint(elCell, value) {
-    elCell.innerHTML = value
-    elCell.classList.add('clicked-hint')
-}
-
 function renderCellEmpty(elCell, value) {
     elCell.innerHTML = value
     elCell.classList.remove('clicked', 'clicked-hint')
@@ -407,4 +455,44 @@ function cancelHint() {
     gGame.hint = false
     gGame.isOn = true
     gHintClicked.classList.add('hide')
+}
+
+
+// TIME AND SCORE
+
+function getTime() {
+    gTimeInterval = setInterval(() => {
+        var diff = Date.now() - gStartTime
+
+        var zeroFill = ''
+        if (diff < 100000) zeroFill = '0'
+        if (diff < 10000) zeroFill = '00'
+
+        gScore = (diff / 1000).toFixed()
+        const elTime = document.querySelector('.time')
+        elTime.innerHTML = `${zeroFill}${(diff / 1000).toFixed()}`
+    }, 1000);
+}
+
+function restartTime() {
+    const elTime = document.querySelector('.time')
+    elTime.innerHTML = '000'
+}
+
+function renderScore() {
+    var zeroFill = ''
+    if (gScore < 100) zeroFill = '0'
+    if (gScore < 10) zeroFill = '00'
+
+    const elScore = document.querySelector('.h1-score')
+    elScore.innerHTML = `Nice! Your score is: <span class="score-dig"> ${zeroFill}${gScore}`
+}
+
+function renderBestScore(levelStr, bestScore){
+    var zeroFill = ''
+    if (bestScore < 100) zeroFill = '0'
+    if (bestScore < 10) zeroFill = '00'
+
+    const elBestScore = document.querySelector(levelStr)
+    elBestScore.innerHTML = `${zeroFill}${bestScore}`
 }

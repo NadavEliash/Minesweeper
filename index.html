@@ -10,7 +10,7 @@
 </head>
 
 <body onload="onInitGame()" oncontextmenu="return false">
-    <h1>MINESWEEPER</h1>
+    <h1 class="title">MINESWEEPER</h1>
     
     <div class="top">
         <div class="button level">
@@ -18,6 +18,7 @@
             <button class="button" onclick="onLevelSelection('Medium')">Medium</button>
             <button class="button" onclick="onLevelSelection('Expert')">Expert</button>
         </div>
+        <div class="time"></div>
         <div class="lives"></div>
         <button class="button restart" onclick="onInitGame()"></button>
         <div class="hints"></div>
@@ -26,6 +27,13 @@
         <table> 
             <tbody class="board"></tbody>
         </table>
+        <div class="score">
+            <h1 class="h1-score"></h1>
+            <h2 class="h2-best-score">BEST SCORE</h2>
+            <table> 
+                <tbody class="best-score"></tbody>
+            </table>
+        </div>
     </div>
     
     <script src="js/game.js"></script>
