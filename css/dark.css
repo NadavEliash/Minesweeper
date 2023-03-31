@@ -237,6 +237,10 @@ button:hover {
     height: 33px;
 }
 
+.red {
+    background-color: red;
+}
+
 .hide {
     display: none;
 }

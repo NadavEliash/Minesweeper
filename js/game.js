@@ -90,6 +90,7 @@ function onLevelSelection(str) {
     onInitGame()
 }
 
+
 // RENDER HINT BOX
 
 function renderHints(count) {
@@ -97,6 +98,7 @@ function renderHints(count) {
     var str = `<button class="hint" onclick="onHintClicked(this)">💡 </button>`
     elHintsCount.innerHTML = str.repeat(count)
 }
+
 
 // RENDER EMPTY BOARD
 
@@ -118,6 +120,7 @@ function renderBoard(board, selector) {
     const elContainer = document.querySelector(selector)
     elContainer.innerHTML = strHTML
 }
+
 
 // CLICKING CELLS
 
@@ -174,6 +177,8 @@ function onCellClicked(elCell, i, j) {
         gLastTurnCells = gCurrTurnCells
         getCurrTurnCells()
         if (!gGame.lives) {
+            elCell.classList.add('red')
+            renderCell(elCell, MINE)
             revealMines()
             gGame.isOn = false
             restartButton('lose')
@@ -240,6 +245,7 @@ function getElCell(i, j) {
     return elCell
 }
 
+
 // BUILD THE REAL BOARD (after first clicking), add mines and claulate neighbors
 
 function buildBoard() {
@@ -296,6 +302,7 @@ function getRandomCells(board) {
     // console.log(randomCells)
     return randomCells
 }
+
 
 // FIRST CLICK SAFETY
 // creates an array of all board cells without the first clicked, then puts mines randomly using that array
@@ -394,7 +401,7 @@ function revealMines() {
             if (gBoard[i][j].isMine === true) {
                 const elCell = getElCell(i, j)
                 // console.log(elCell)
-                renderCell(elCell, MINE)
+                setTimeout(renderCell, 60 * i, elCell, MINE)
             }
         }
     }
@@ -532,6 +539,7 @@ function renderBestScore(levelStr, bestScore) {
     elBestScore.innerHTML = `${zeroFill}${bestScore}`
 }
 
+
 // SAFE CLICK BUTTON
 
 function onSafeClick() {
@@ -571,10 +579,8 @@ function renderSafeButton() {
     elSafeButtonNum.innerHTML = `${gSafeclickCount}`
 }
 
-// MANUALY POSITIONED MINES
 
-// TODO:    fix problem of added mines
-//          fix button toggle
+// MANUALY POSITIONED MINES
 
 function onMinesByUser() {
     onInitGame()
@@ -614,8 +620,6 @@ function buttonMinesByUserOff() {
     const elButton = document.querySelector('.button.mines-by-user')
     elButton.classList.remove('clicked')
 }
-
-
 
 
 // UNDO
@@ -670,6 +674,7 @@ function renderLastTurnCells(cells) {
         }
     }
 }
+
 
 // DARK MODE
 
