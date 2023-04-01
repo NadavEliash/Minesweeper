@@ -59,8 +59,9 @@ button:hover {
     margin-left: 10px;
 }
 
+
 .restart:active {
-    background-color: rgb(102, 77, 101);
+    background-color: rgb(102, 122, 138);
     font-size: medium;
 }
 

@@ -28,8 +28,6 @@ button {
     margin: auto;
     width: 120px;
     height: 40px;
-
-
 }
 
 .dark {
@@ -46,6 +44,10 @@ button {
     border: solid 2px rgb(99, 4, 136);
     font-size: large;
     margin-left: 10px;
+}
+
+.restart:hover {
+    background-color: rgb(216, 182, 223);
 }
 
 .restart:active {
