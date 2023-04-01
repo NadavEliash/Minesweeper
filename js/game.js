@@ -34,6 +34,9 @@ var gScore = 0
 var gSafeclickCount
 var gMinesByUserCount = 0
 
+var gTurns = []
+var gExpandTurn = []
+
 var gLastTurnShownCount
 var gLastTurnCells = []
 var gCurrTurnCells = []
@@ -46,10 +49,11 @@ function onInitGame() {
     gGame.firstClick = true
     gGame.shownCount = 0
     gGame.markedCount = 0
-    gGame.secsPassed = 0
     gGame.lives = 3
     gSafeclickCount = 3
     gMinesByUserCount = 0
+    gTurns = []
+    gExpandTurn = []
 
     buttonMinesByUserOff()
     restartButton('start')
@@ -174,8 +178,11 @@ function onCellClicked(elCell, i, j) {
         gGame.lives--
         renderLives(gGame.lives)
         gBoard[i][j].isShown = true
+
         gLastTurnCells = gCurrTurnCells
         getCurrTurnCells()
+        gTurns.push([{ i: i, j: j }])
+
         if (!gGame.lives) {
             elCell.classList.add('red')
             renderCell(elCell, MINE)
@@ -198,6 +205,7 @@ function onCellClicked(elCell, i, j) {
     }
     else {
         expandShown(gBoard, i, j)
+        gTurns.push(gExpandTurn)
         gLastTurnCells = gCurrTurnCells
         getCurrTurnCells()
         return
@@ -205,6 +213,8 @@ function onCellClicked(elCell, i, j) {
 
     clickedCell.isShown = true
     gGame.shownCount++
+
+    gTurns.push([{ i: i, j: j }])
     gLastTurnCells = gCurrTurnCells
     getCurrTurnCells()
     // console.log(gGame.shownCount)
@@ -215,6 +225,7 @@ function onCellClicked(elCell, i, j) {
 }
 
 function expandShown(board, cellI, cellJ) {
+    var currTurn = []
     for (var i = cellI - 1; i <= cellI + 1; i++) {
         if (i < 0 || i >= board.length) continue
         for (var j = cellJ - 1; j <= cellJ + 1; j++) {
@@ -227,10 +238,12 @@ function expandShown(board, cellI, cellJ) {
             board[i][j].isShown = true
             // console.log(gGame.shownCount)
             if (value === '') expandShown(board, i, j)
+            currTurn.push({ i: i, j: j })
             gGame.shownCount++
             checkGameOver()
         }
     }
+    gExpandTurn.push(currTurn)
 }
 
 function renderCell(elCell, value) {
@@ -624,15 +637,15 @@ function buttonMinesByUserOff() {
 
 // UNDO
 
-// TODO: there is a problem with undo when "mines by user" function is on
+// OLD: works one turn only
 
-function onUndo() {
-    if (!gGame.isOn) return
-    gGame.shownCount = gLastTurnShownCount
-    renderBoard(gBoard, '.board')
-    renderLastTurnCells(gLastTurnCells)
-    getCurrTurnCells()
-}
+// function onUndo() {
+//     if (!gGame.isOn) return
+//     gGame.shownCount = gLastTurnShownCount
+//     renderBoard(gBoard, '.board')
+//     renderLastTurnCells(gLastTurnCells)
+//     getCurrTurnCells()
+// }
 
 function getCurrTurnCells() {
     gCurrTurnCells = []
@@ -643,36 +656,89 @@ function getCurrTurnCells() {
     }
 }
 
-function renderLastTurnCells(cells) {
+// function renderLastTurnCells(cells) {
 
-    // clean the board
-    for (var i = 0; i < gBoard.length; i++) {
-        for (var j = 0; j < gBoard.length; j++) {
-            gBoard[i][j].isShown = false
+//     // clean the board
+//     for (var i = 0; i < gBoard.length; i++) {
+//         for (var j = 0; j < gBoard.length; j++) {
+//             gBoard[i][j].isShown = false
+//         }
+//     }
+
+//     // rerender last turn cells
+//     for (var i = 0; i < cells.length; i++) {
+//         gBoard[cells[i].i][cells[i].j].isShown = true
+
+//         const elCell = getElCell(cells[i].i, cells[i].j)
+//         var value = ''
+//         if (gBoard[cells[i].i][cells[i].j].isMarked) value = MARK
+//         if (gBoard[cells[i].i][cells[i].j].isMine) value = MINE
+//         if (gBoard[cells[i].i][cells[i].j].minesAroundCount > 0) value = gBoard[cells[i].i][cells[i].j].minesAroundCount
+//         renderCell(elCell, value)
+//     }
+
+//     // render last turn marks
+//     for (var i = 0; i < gBoard.length; i++) {
+//         for (var j = 0; j < gBoard.length; j++) {
+//             if (gBoard[i][j].isMarked) {
+//                 const elCell = getElCell(i, j)
+//                 renderCell(elCell, MARK)
+//             }
+//         }
+//     }
+// }
+
+
+// TODO: still need errors fix
+
+
+function onUndo() {
+    if (!gGame.isOn) return
+    gTurns.pop()
+    renderBoard(gBoard, '.board')
+    console.log('undo')
+    if (!gTurns.length) {
+        onInitGame()
+        return
+    }
+    for (var i = 0; i < gTurns.length; i++) {
+        const currTurn = gTurns[i]
+        if (typeof currTurn[0] === 'object') {
+            const elCell = getElCell(currTurn[0].i, currTurn[0].j)
+            const value = getValue(currTurn[0].i, currTurn[0].j)
+            renderCell(elCell, value)
+            gGame.shownCount--
+            gBoard[currTurn[0].i][currTurn[0].j].isShown = false
+        } else {
+            renderExpandTurn(currTurn)
         }
     }
+}
 
-    // rerender last turn cells
-    for (var i = 0; i < cells.length; i++) {
-        gBoard[cells[i].i][cells[i].j].isShown = true
+function renderExpandTurn(turn) {
 
-        const elCell = getElCell(cells[i].i, cells[i].j)
-        var value = ''
-        if (gBoard[cells[i].i][cells[i].j].isMarked) value = MARK
-        if (gBoard[cells[i].i][cells[i].j].isMine) value = MINE
-        if (gBoard[cells[i].i][cells[i].j].minesAroundCount > 0) value = gBoard[cells[i].i][cells[i].j].minesAroundCount
-        renderCell(elCell, value)
-    }
-
-    // render last turn marks
-    for (var i = 0; i < gBoard.length; i++) {
-        for (var j = 0; j < gBoard.length; j++) {
-            if (gBoard[i][j].isMarked) {
-                const elCell = getElCell(i, j)
-                renderCell(elCell, MARK)
-            }
+    for (var i = 0; i < turn.length; i++) {
+        const currTurn = turn[i]
+        if (typeof currTurn[0] === 'object') {
+            const elCell = getElCell(currTurn[0].i, currTurn[0].j)
+            const value = getValue(currTurn[0].i, currTurn[0].j)
+            gGame.shownCount--
+            gBoard[currTurn[0].i][currTurn[0].j].isShown = false
+            renderCell(elCell, value)
+        } else {
+            renderExpandTurn(currTurn)
         }
     }
+}
+
+function getValue(i, j) {
+    console.log(i, j)
+    var value
+    if (gBoard[i][j].isMine) { value = MINE }
+    else if (gBoard[i][j].isMarked) { value = MARK }
+    else if (gBoard[i][j].minesAroundCount > 0) { value = gBoard[i][j].minesAroundCount }
+    else { value = '' }
+    return value
 }
 
 
