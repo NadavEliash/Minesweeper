@@ -1,5 +1,6 @@
 'use strict'
 
+const STORAGE_KEY = 'bestScoreDB'
 const MINE = '💣'
 const MARK = '🚩'
 
@@ -21,9 +22,9 @@ var gGame = {
     lives: 3
 }
 var gBestScore = {
-    beginner: Infinity,
-    medium: Infinity,
-    expert: Infinity
+    beginner: '',
+    medium: '',
+    expert: ''
 }
 
 var gFirstClick = {}
@@ -37,6 +38,7 @@ var gMinesByUserCount = 0
 var gTurn = 0
 
 var gDark = false
+var gSafeclick = false
 
 
 function onInitGame() {
@@ -56,6 +58,7 @@ function onInitGame() {
     renderLives(gGame.lives)
     renderHints(3)
     renderSafeButton()
+    loadFromStorage()
 
     clearInterval(gTimeInterval)
     restartTime()
@@ -100,6 +103,20 @@ function renderHints(count) {
 }
 
 
+// LOAD BEST SCORE FROM STORAGE
+
+function loadFromStorage() {
+    const str = localStorage.getItem(STORAGE_KEY)
+    console.log(str)
+    if (!str) return
+    gBestScore = JSON.parse(str)
+
+    renderBestScore('.beginner', gBestScore.beginner)
+    renderBestScore('.medium', gBestScore.medium)
+    renderBestScore('.expert', gBestScore.expert)
+}
+
+
 // RENDER EMPTY BOARD
 
 function renderBoard(board, selector) {
@@ -122,7 +139,7 @@ function renderBoard(board, selector) {
 }
 
 
-// CLICKING CELLS
+// ON CLICKING CELLS
 
 function onCellClicked(elCell, i, j) {
 
@@ -162,7 +179,7 @@ function onCellClicked(elCell, i, j) {
 
     // conditions to play
 
-    if (gBoard[i][j].isMarked || gBoard[i][j].isShown) return
+    if (gBoard[i][j].isMarked || gBoard[i][j].isShown || gSafeclick) return
 
 
     const clickedCell = gBoard[i][j]
@@ -385,29 +402,26 @@ function checkGameOver() {
         clearInterval(gTimeInterval)
         gGame.isOn = false
         restartButton('win')
+        renderScore()
         getBestScore()
     }
     return
 }
 
 function getBestScore() {
-    switch (gLevel.size) {
-        case 4:
-            if (gScore < gBestScore.beginner) gBestScore.beginner = gScore
-            renderScore()
-            renderBestScore('.beginner', gBestScore.beginner)
-            break
-        case 8:
-            if (gScore < gBestScore.medium) gBestScore.medium = gScore
-            renderScore()
-            renderBestScore('.medium', gBestScore.medium)
-            break
-        case 12:
-            if (gScore < gBestScore.expert) gBestScore.expert = gScore
-            renderScore()
-            renderBestScore('.expert', gBestScore.expert)
-            break
+    var currLevel
+    if (gLevel.size === 4) currLevel = 'beginner'
+    if (gLevel.size === 8) currLevel = 'medium'
+    if (gLevel.size === 12) currLevel = 'expert'
+
+    if (gBestScore[currLevel] === '') {
+        gBestScore[currLevel] = gScore
+    } else if (gScore < gBestScore[currLevel]) {
+        gBestScore[currLevel] = gScore
     }
+
+    renderBestScore(`.${currLevel}`, gBestScore[currLevel])
+    saveToStorage(gBestScore)
 }
 
 function revealMines() {
@@ -538,7 +552,7 @@ function renderScore() {
     if (gScore < 10) zeroFill = '00'
 
     const elScore = document.querySelector('.h1-score')
-    elScore.innerHTML = `Nice! You do it in <span class="score-dig"> ${zeroFill}${gScore}</span> seconds`
+    elScore.innerHTML = `Nice! You done it by <span class="score-dig"> ${zeroFill}${gScore}</span> seconds`
 }
 
 function hideScore() {
@@ -546,6 +560,7 @@ function hideScore() {
     elScore.innerHTML = ''
 }
 function renderBestScore(levelStr, bestScore) {
+    if (bestScore === '') return
     var zeroFill = ''
     if (bestScore < 100) zeroFill = '0'
     if (bestScore < 10) zeroFill = '00'
@@ -568,7 +583,9 @@ function onSafeClick() {
     if (gBoard[safeCell.i][safeCell.j].minesAroundCount > 0) value = gBoard[safeCell.i][safeCell.j].minesAroundCount
     if (gBoard[safeCell.i][safeCell.j].isMine) value = MINE
     renderSafeCell(elCell, value)
+    gSafeclick = true
     setTimeout(renderCellEmpty, 1000, elCell, '');
+    setTimeout(() => { gSafeclick = false }, 1000);
     gSafeclickCount--
     renderSafeButton()
 }
@@ -665,4 +682,11 @@ function onDark() {
     } else {
         elLink.href = 'css/main.css'
     }
+}
+
+// SAVE TO STORAGE
+
+function saveToStorage(records) {
+    const str = JSON.stringify(records)
+    localStorage.setItem(STORAGE_KEY, str)
 }

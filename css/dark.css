@@ -3,7 +3,7 @@
 }
 
 body {
-    background-color: rgb(33, 34, 34);
+    background-color: rgb(63, 63, 63);
     margin: auto;
     width: 800px;
 }
@@ -19,7 +19,7 @@ body {
 button {
     font-size: small;
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-    background-color: rgb(150, 150, 150);
+    background-color: rgb(205, 205, 205);
     color: rgb(19, 19, 19);
 }
 
@@ -28,12 +28,19 @@ button:hover {
 }
 
 .mines-by-user button {
-    background-color: rgb(150, 150, 150);
     height: 30px;
 }
 
 .mines-by-user button:hover {
     background-color: rgb(181, 194, 206);
+}
+
+.your-score {
+    height: 30px;
+    margin-bottom: 20px;
+    text-align: center;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-size: 0.7em;
 }
 
 .main-functions {
@@ -85,8 +92,6 @@ button:hover {
 
 .mines-by-user {
     text-align: center;
-    margin-bottom: 10px;
-
 }
 
 .lives {
@@ -96,7 +101,7 @@ button:hover {
     padding: 8px;
     width: 120px;
     margin-left: 100px;
-    margin-top: 60px;
+    margin-top: 120px;
     border: solid 2px rgb(88, 0, 0);
 }
 
@@ -112,7 +117,7 @@ button:hover {
     width: 120px;
     height: 40px;
     margin-left: 100px;
-    margin-top: 120px;
+    margin-top: 180px;
     border: solid 2px rgb(145, 141, 141);
     background-color: rgb(111, 100, 138);
 }
@@ -136,7 +141,7 @@ button:hover {
     width: 120px;
     height: 40px;
     margin-left: 600px;
-    margin-top: 60px;
+    margin-top: 120px;
     border: solid 1px rgb(139, 139, 139);
     background-color: rgb(27, 27, 27);
 }
@@ -145,7 +150,7 @@ button:hover {
     color: rgb(216, 216, 209);
     position: absolute;
     margin-left: 600px;
-    margin-top: 120px;
+    margin-top: 180px;
     height: 40px;
     width: 120px;
     background-color: rgb(32, 32, 32);
@@ -166,6 +171,7 @@ button:hover {
 .board {
     margin-top: 100px;
     margin: auto;
+    border-collapse: collapse;
 }
 
 .cell {
@@ -173,7 +179,7 @@ button:hover {
     font-size: small;
     font-weight: bold;
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-    background-color: rgba(49, 49, 49, 0.856);
+    background-color: rgba(93, 93, 93, 0.856);
     border: 2px solid #000;
     padding: 3px;
     height: 30px;
@@ -200,7 +206,7 @@ button:hover {
 }
 
 .clicked {
-    background-color: rgba(126, 126, 126, 0.733);
+    background-color: rgba(145, 145, 145, 0.733);
 }
 
 .safe {

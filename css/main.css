@@ -74,8 +74,14 @@ button {
 
 .mines-by-user {
     text-align: center;
-    margin-bottom: 10px;
+}
 
+.your-score {
+    height: 30px;
+    margin-bottom: 20px;
+    text-align: center;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-size: 0.7em;
 }
 
 .lives {
@@ -85,7 +91,7 @@ button {
     padding: 8px;
     width: 120px;
     margin-left: 100px;
-    margin-top: 60px;
+    margin-top: 120px;
     border: solid 2px red;
 }
 
@@ -101,7 +107,7 @@ button {
     width: 120px;
     height: 40px;
     margin-left: 100px;
-    margin-top: 120px;
+    margin-top: 180px;
     border: solid 2px rgb(27, 68, 201);
 }
 
@@ -124,14 +130,14 @@ button {
     width: 120px;
     height: 40px;
     margin-left: 600px;
-    margin-top: 60px;
+    margin-top: 120px;
     background-color: rgb(27, 27, 27);
 }
 
 .safe-click {
     position: absolute;
     margin-left: 600px;
-    margin-top: 120px;
+    margin-top: 180px;
     height: 40px;
     width: 120px;
     background-color: rgb(179, 179, 179);
@@ -148,6 +154,7 @@ button {
 .board {
     margin-top: 100px;
     margin: auto;
+    border-collapse: collapse;
 }
 
 .cell {
