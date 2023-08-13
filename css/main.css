@@ -198,6 +198,10 @@ button {
     padding: 5px;
     height: 55px;
     border: solid 2px rgb(27, 68, 201);
+
+    @media(max-width: 600px) {
+        width: 115px;
+    }
 }
 
 .hint {
@@ -240,10 +244,19 @@ button {
     flex-direction: column;
     align-items: center;
     background-color: rgb(179, 179, 179);
+
+    @media(max-width: 600px) {
+        font-size: 1rem;
+        width: 115px;
+    }
 }
 
 .clicks-remain {
     font-size: 1rem;
+
+    @media(max-width: 600px) {
+        font-size: .75rem;
+    }
 }
 
 .container {
@@ -283,6 +296,11 @@ button {
     padding: 1px;
     height: 24px;
     width: 24px;
+
+    @media(max-width: 330px) {
+        height: 20px;
+        width: 20px;
+    }
 }
 
 .clicked-hint {
