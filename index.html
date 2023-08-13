@@ -7,11 +7,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Minesweeper</title>
     <link rel="stylesheet" href="css/main.css">
+    <link class="dark-mode" rel="stylesheet" href="">
 </head>
 
 <body onload="onInitGame()" oncontextmenu="return false">
-    <h1 class="title">MINESWEEPER</h1>
     <div class="top">
+        <h1 class="title">MINESWEEPER</h1>
         <div class="button level">
             <button class="button" onclick="onLevelSelection('Beginner')">Beginner</button>
             <button class="button" onclick="onLevelSelection('Medium')">Medium</button>
@@ -20,42 +21,47 @@
         <div class="mines-by-user">
             <button class="button mines-by-user" onclick="onMinesByUser()">Set mines yourself</button>
         </div>
-        <div class="lives"></div>
-        <div class="hints"></div>
-        <div class="time"></div>
-        <button class="button safe-click" onclick="onSafeClick()">Safe Click <br><span class="clicks-remain"><span
-                    class="num-clicks-remain">3</span> clicks remain</span></button>
-    </div>
-    <div class="your-score">
-        <h1 class="h1-score"></h1>
-    </div>
-    <div class="main-functions">
-        <button class="button dark" onclick="onDark()"></button>
-        <button class="button restart" onclick="onInitGame()"></button>
-        <button class="button undo" onclick="onUndo()">↪</button>
+        <div class="your-score">
+            <h1 class="h1-score"></h1>
+        </div>
     </div>
 
-    <div class="container">
+
+    <section class="side-features">
+        <div class="time"></div>
+        <div class="lives"></div>
+        <div class="hints"></div>
+        <button class="button safe-click" onclick="onSafeClick()">Safe Click <br><span class="clicks-remain"><span
+                    class="num-clicks-remain">3</span> clicks remain</span></button>
+    </section>
+
+    <section class="board-container">
+        <div class="main-functions">
+            <button class="button dark" onclick="onDark()"></button>
+            <button class="button restart" onclick="onInitGame()"></button>
+            <button class="button undo" onclick="onUndo()">↪</button>
+        </div>
         <table class="board">
             <tbody></tbody>
         </table>
-        <div class="score">
-            <h2 class="h2-best-score">BEST SCORE</h2>
-            <table class="best-score">
-                <tbody>
-                    <tr>
-                        <td>Begginer</td>
-                        <td>Medium</td>
-                        <td>Expert</td>
-                    </tr>
-                    <tr>
-                        <td class="beginner"></td>
-                        <td class="medium"></td>
-                        <td class="expert"></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+    </section>
+
+    <div class="score">
+        <h2 class="h2-best-score">BEST SCORE</h2>
+        <table class="best-score">
+            <tbody>
+                <tr>
+                    <td>Begginer</td>
+                    <td>Medium</td>
+                    <td>Expert</td>
+                </tr>
+                <tr>
+                    <td class="beginner"></td>
+                    <td class="medium"></td>
+                    <td class="expert"></td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 
     <h3>© Nadav Eliash</h3>

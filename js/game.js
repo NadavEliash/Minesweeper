@@ -98,7 +98,7 @@ function onLevelSelection(str) {
 
 function renderHints(count) {
     const elHintsCount = document.querySelector('.hints')
-    var str = `<button class="hint" onclick="onHintClicked(this)">💡 </button>`
+    var str = `<button class="hint" onclick="onHintClicked(this)">💡</button>`
     elHintsCount.innerHTML = str.repeat(count)
 }
 
@@ -454,7 +454,7 @@ function restartButton(str) {
 function renderLives(count) {
     const elLivesCount = document.querySelector('.lives')
     elLivesCount.classList.remove('dead')
-    var str = '💗'
+    var str = '💗 '
     elLivesCount.innerHTML = str.repeat(count)
     if (count === 0) {
         elLivesCount.innerHTML = '💀'
@@ -676,11 +676,12 @@ function onUndo() {
 function onDark() {
     gDark = !gDark
 
-    const elLink = document.querySelector('link')
+    const elLink = document.querySelector('.dark-mode')
+    
     if (gDark) {
         elLink.href = 'css/dark.css'
     } else {
-        elLink.href = 'css/main.css'
+        elLink.href = ''
     }
 }
 

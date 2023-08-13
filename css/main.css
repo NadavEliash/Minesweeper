@@ -3,47 +3,120 @@
 }
 
 body {
+    margin: 0;
+    height: 100vh;
     background-color: azure;
-    margin: auto;
-    width: 800px;
+    display: grid;
+    grid-template-columns: 1fr 1.5fr 1fr;
+    grid-template-rows: 1fr 380px 1fr 50px;
+    caret-color: transparent;
+
+    @media(max-width: 600px) {
+        display: flex;
+        flex-direction: column;
+        width: 100vw;
+
+        .title {
+            font-size: 2rem;
+            margin-top: 10px;
+        }
+    }
 }
 
 .title {
+    grid-column: 2;
     text-align: center;
     margin-top: 40px;
-    font-size: x-large;
+    font-size: 3rem;
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
 
 button {
-    font-size: small;
+    font-size: 1.3rem;
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    padding-inline: 2vh;
+    padding-block: 1vh;
+    cursor: pointer;
+
+    @media(max-width: 600px) {
+        font-size: 1rem;
+    }
 }
 
-.mines-by-user button {
-    height: 30px;
+.top {
+    grid-column: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+
+    @media(max-width: 600px) {
+        gap: .5rem;
+    }
+}
+
+.mines-by-user {
+    font-weight: 900;
+}
+
+.side-features {
+    justify-self: end;
+    align-self: start;
+    grid-column: 1;
+    grid-row: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    width: 180px;
+
+    @media(max-width: 600px) {
+        align-self: center;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 10px;
+        margin-bottom: 10px;
+        margin-top: -2rem;
+        width: 260px;
+        flex-direction: row;
+    }
+}
+
+.board-container {
+    grid-column: 2;
+    justify-self: center;
+    align-self: baseline;
+    padding: 1rem;
+    border-radius: .5rem;
+    border: 1px solid black;
+    width: max-content;
+
+    @media(max-width: 600px) {
+        margin: auto;
+    }
 }
 
 .main-functions {
-    margin: auto;
-    width: 120px;
-    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+    margin-bottom: 1rem;
 }
 
 .dark {
-    margin-top: 5px;
     background-color: black;
-    height: 30px;
+    height: 35px;
     width: 30px;
 }
 
 .restart {
-    position: absolute;
     height: 40px;
     width: 40px;
     border: solid 2px rgb(99, 4, 136);
     font-size: large;
-    margin-left: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .restart:hover {
@@ -56,20 +129,25 @@ button {
 }
 
 .undo {
-    margin-top: 5px;
-    margin-left: 60px;
-    position: absolute;
-    height: 30px;
+    height: 35px;
     width: 30px;
     border: solid 2px black;
     rotate: 180deg;
     font-size: large;
-    font-weight: bold;
+    font-weight: 900;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .level {
-    margin-left: calc(50% - 90px);
-    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    gap: 2rem;
+
+    @media(max-width: 600px) {
+        gap: 4px;
+    }
 }
 
 .mines-by-user {
@@ -77,22 +155,34 @@ button {
 }
 
 .your-score {
-    height: 30px;
-    margin-bottom: 20px;
     text-align: center;
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-    font-size: 0.7em;
+    font-size: 0.875rem;
+    height: 50px;
+    z-index: 100;
+
+    @media(max-width: 600px) {
+        font-size: .75rem;
+        padding-top: 1rem;
+    }
+}
+
+.h1-score {
+    margin: 0;
+    background-color: azure; 
 }
 
 .lives {
-    position: absolute;
     background-color: rgb(255, 241, 241);
     text-align: center;
     padding: 8px;
-    width: 120px;
-    margin-left: 100px;
-    margin-top: 120px;
+    font-size: 1.5rem;
     border: solid 2px red;
+
+    @media(max-width: 600px) {
+        font-size: 1.2rem;
+        width: 115px;
+    }
 }
 
 .dead {
@@ -101,50 +191,59 @@ button {
 }
 
 .hints {
-    position: absolute;
-    text-align: center;
+    display: grid;
+    justify-items: center;
+    align-items: center;
+    grid-template-columns: repeat(3, 1fr);
     padding: 5px;
-    width: 120px;
-    height: 40px;
-    margin-left: 100px;
-    margin-top: 180px;
+    height: 55px;
     border: solid 2px rgb(27, 68, 201);
 }
 
 .hint {
     background-color: rgb(153, 212, 240);
     border-radius: 50%;
-    height: 25px;
     margin-left: 3px;
+    font-size: 1rem;
+    padding-inline: 15px;
+    padding-block: 10px;
     border: none;
+
+    @media(max-width: 600px) {
+        font-size: .875rem;
+        padding-inline: 8px;
+        padding-block: 5px;
+        height: 30px;
+    }
 }
 
 .time {
     color: yellow;
-    position: absolute;
     text-align: center;
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-    letter-spacing: 3px;
-    font-size: large;
+    letter-spacing: 10px;
+    font-size: 2rem;
     padding: 10px;
-    width: 120px;
-    height: 40px;
-    margin-left: 600px;
-    margin-top: 120px;
     background-color: rgb(27, 27, 27);
+
+    @media(max-width: 600px) {
+        font-size: 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 115px;
+    }
 }
 
 .safe-click {
-    position: absolute;
-    margin-left: 600px;
-    margin-top: 180px;
-    height: 40px;
-    width: 120px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     background-color: rgb(179, 179, 179);
 }
 
 .clicks-remain {
-    font-size: xx-small;
+    font-size: 1rem;
 }
 
 .container {
@@ -159,29 +258,31 @@ button {
 
 .cell {
     text-align: center;
-    font-size: small;
+    font-size: 1.2rem;
     font-weight: bold;
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
     background-color: rgba(231, 231, 231, 0.856);
     border: 2px solid #000;
     padding: 3px;
+    height: 40px;
+    width: 40px;
+    caret-color: transparent;
+    cursor: pointer;
+}
+
+.cell-medium {
+    font-size: 1rem;
+    font-weight: normal;
     height: 30px;
     width: 30px;
 }
 
-.cell-medium {
-    font-size: x-small;
-    font-weight: normal;
-    height: 24px;
-    width: 24px;
-}
-
 .cell-small {
-    font-size: xx-small;
+    font-size: .75rem;
     font-weight: lighter;
     padding: 1px;
-    height: 18px;
-    width: 20px;
+    height: 24px;
+    width: 24px;
 }
 
 .clicked-hint {
@@ -197,10 +298,11 @@ button {
 }
 
 .score {
+    grid-column: 2;
+    grid-row: 3;
     text-align: center;
     padding: 5px;
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-    font-size: xx-small;
 }
 
 .score-dig {
@@ -217,20 +319,22 @@ button {
 
 .best-score {
     margin: auto;
+
 }
 
 .best-score td {
-    font-size: small;
+    font-size: 1.2rem;
     border: solid 2px black;
     padding: 7px;
     height: 33px;
 }
 
 h3 {
+    grid-column: 2;
+    grid-row: 4;
     text-align: center;
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     font-size: medium;
-    margin-top: 50px;
 }
 
 .red {

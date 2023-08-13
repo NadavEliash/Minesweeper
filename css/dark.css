@@ -1,24 +1,12 @@
-* {
-    box-sizing: border-box;
-}
-
 body {
     background-color: rgb(63, 63, 63);
-    margin: auto;
-    width: 800px;
 }
 
 .title {
     color: rgb(216, 216, 209);
-    text-align: center;
-    margin-top: 40px;
-    font-size: x-large;
-    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
 
 button {
-    font-size: small;
-    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
     background-color: rgb(205, 205, 205);
     color: rgb(19, 19, 19);
 }
@@ -27,81 +15,31 @@ button:hover {
     background-color: rgb(181, 194, 206);
 }
 
-.mines-by-user button {
-    height: 30px;
-}
-
 .mines-by-user button:hover {
     background-color: rgb(181, 194, 206);
 }
 
-.your-score {
-    height: 30px;
-    margin-bottom: 20px;
-    text-align: center;
-    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-    font-size: 0.7em;
-}
-
-.main-functions {
-    margin: auto;
-    width: 120px;
-    height: 40px;
-}
-
 .dark {
-    margin-top: 5px;
     background-color: rgb(255, 255, 255);
-    height: 30px;
-    width: 30px;
 }
 
 .restart {
-    position: absolute;
-    height: 40px;
-    width: 40px;
     border: solid 2px rgb(40, 6, 53);
     background-color: rgb(150, 150, 150);
-    font-size: large;
-    margin-left: 10px;
 }
 
 
 .restart:active {
     background-color: rgb(102, 122, 138);
-    font-size: medium;
 }
 
 .undo {
-    margin-top: 5px;
-    margin-left: 60px;
-    position: absolute;
-    height: 30px;
-    width: 30px;
     border: solid 2px black;
     background-color: rgb(150, 150, 150);
-    rotate: 180deg;
-    font-size: large;
-    font-weight: bold;
-}
-
-.level {
-    margin-left: calc(50% - 90px);
-    margin-bottom: 10px;
-}
-
-.mines-by-user {
-    text-align: center;
 }
 
 .lives {
-    position: absolute;
     background-color: rgb(94, 94, 94);
-    text-align: center;
-    padding: 8px;
-    width: 120px;
-    margin-left: 100px;
-    margin-top: 120px;
     border: solid 2px rgb(88, 0, 0);
 }
 
@@ -111,48 +49,20 @@ button:hover {
 }
 
 .hints {
-    position: absolute;
-    text-align: center;
-    padding: 5px;
-    width: 120px;
-    height: 40px;
-    margin-left: 100px;
-    margin-top: 180px;
     border: solid 2px rgb(145, 141, 141);
     background-color: rgb(111, 100, 138);
 }
 
 .hint {
     background-color: rgb(175, 147, 163);
-    border-radius: 50%;
-    height: 25px;
-    margin-left: 3px;
-    border: none;
 }
 
 .time {
-    color: yellow;
-    position: absolute;
-    text-align: center;
-    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-    letter-spacing: 3px;
-    font-size: large;
-    padding: 10px;
-    width: 120px;
-    height: 40px;
-    margin-left: 600px;
-    margin-top: 120px;
     border: solid 1px rgb(139, 139, 139);
-    background-color: rgb(27, 27, 27);
 }
 
 .safe-click {
     color: rgb(216, 216, 209);
-    position: absolute;
-    margin-left: 600px;
-    margin-top: 180px;
-    height: 40px;
-    width: 120px;
     background-color: rgb(32, 32, 32);
 }
 
@@ -160,45 +70,9 @@ button:hover {
     background-color: rgb(83, 82, 82);
 }
 
-.clicks-remain {
-    font-size: xx-small;
-}
-
-.container {
-    margin-top: 10px;
-}
-
-.board {
-    margin-top: 100px;
-    margin: auto;
-    border-collapse: collapse;
-}
-
 .cell {
-    text-align: center;
-    font-size: small;
-    font-weight: bold;
-    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
     background-color: rgba(93, 93, 93, 0.856);
     border: 2px solid #000;
-    padding: 3px;
-    height: 30px;
-    width: 30px;
-}
-
-.cell-medium {
-    font-size: x-small;
-    font-weight: normal;
-    height: 24px;
-    width: 24px;
-}
-
-.cell-small {
-    font-size: xx-small;
-    font-weight: lighter;
-    padding: 1px;
-    height: 18px;
-    width: 20px;
 }
 
 .clicked-hint {
@@ -215,46 +89,23 @@ button:hover {
 
 .score {
     color: rgb(216, 216, 209);
-    text-align: center;
-    padding: 5px;
-    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-    font-size: xx-small;
 }
 
 .score-dig {
-    padding: 2px;
     color: rgb(233, 233, 87);
-    letter-spacing: 1px;
 }
 
 .h2-best-score {
     color: rgb(216, 216, 209);
-    margin-top: 20px;
-    font-size: small;
-    font-weight: normal;
-    letter-spacing: 1px;
-}
-
-.best-score {
-    margin: auto;
 }
 
 .best-score td {
     color: rgb(216, 216, 209);
-    font-size: small;
-    font-weight: normal;
-    letter-spacing: 0.1px;
     border: solid 2px rgb(107, 107, 107);
-    padding: 7px;
-    height: 33px;
 }
 
 h3 {
-    text-align: center;
-    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-    font-size: medium;
     color: rgb(216, 216, 209);
-    margin-top: 50px;
 }
 
 .red {
