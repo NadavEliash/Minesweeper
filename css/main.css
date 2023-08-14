@@ -275,6 +275,7 @@ button {
     font-weight: bold;
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
     background-color: rgba(231, 231, 231, 0.856);
+    color: black;
     border: 2px solid #000;
     padding: 3px;
     height: 40px;
